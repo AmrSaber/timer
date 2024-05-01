@@ -14,7 +14,7 @@ import (
 	"github.com/gosuri/uilive"
 )
 
-var numberRegex = regexp.MustCompile(`^-?\d+$`)
+var numberRegex = regexp.MustCompile(`^-?\d+(?:\.\d+)?$`)
 
 func main() {
 	if len(os.Args) == 1 {
