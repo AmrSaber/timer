@@ -1,4 +1,4 @@
-module timer
+module github.com/AmrSaber/timer
 
 go 1.22.2
 

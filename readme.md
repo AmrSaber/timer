@@ -2,9 +2,9 @@
 CLI tool that is very similar to `sleep` but it shows a timer with the remaining time (timer is removed when done).
 
 ## Install
-You can install the package with go with:
+You can install the package using [go](https://go.dev/doc/install) with:
 ```bash
-go install https://github.com/AmrSaber/cli-timer
+go install github.com/AmrSaber/timer
 ```
 
 If you want to uninstall it, you can run
