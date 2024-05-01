@@ -57,4 +57,7 @@ func main() {
 
 	fmt.Fprintln(uiWriter, "")
 	uiWriter.Stop()
+
+	// Move cursor 1 line up
+	fmt.Print("\033[1A")
 }
