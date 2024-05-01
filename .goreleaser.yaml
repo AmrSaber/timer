@@ -1,0 +1,28 @@
+# Template from: https://goreleaser.com/customization/build/
+project_name: timer
+
+builds:
+  - main: ./main.go
+
+    env:
+      - CGO_ENABLED=0
+
+    # GOOS list to build for.
+    # For more info refer to: https://golang.org/doc/install/source#environment
+    goos:
+      - linux
+      - darwin
+      - windows
+
+    # GOARCH to build for.
+    # For more info refer to: https://golang.org/doc/install/source#environment
+    goarch:
+      - amd64
+      - arm
+      - arm64
+      - '386'
+
+archives:
+  - format: binary
+    name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}'
+
