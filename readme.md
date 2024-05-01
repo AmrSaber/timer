@@ -6,7 +6,7 @@ CLI tool that is very similar to `sleep` but it shows a timer with the remaining
 ### Go install
 You can install the package from code with [go](https://go.dev/doc/install) by running:
 ```bash
-go install github.com/AmrSaber/timer
+go install github.com/AmrSaber/timer@latest
 ```
 
 To uninstall, run:
