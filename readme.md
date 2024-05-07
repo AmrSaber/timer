@@ -4,6 +4,13 @@ CLI tool that is very similar to `sleep` but it shows a timer with the remaining
 
 ![demo](./static/demo.gif)
 
+
+It is safe to set
+```bash
+alias sleep=timer
+```
+As it behaves exactly the same as `sleep` (and more).
+
 ## Install
 
 ### Go install
