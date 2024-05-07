@@ -1,6 +1,9 @@
 # CLI Timer
 CLI tool that is very similar to `sleep` but it shows a timer with the remaining time (timer disappears when done).
 
+
+![demo](./static/demo.gif)
+
 ## Install
 
 ### Go install
