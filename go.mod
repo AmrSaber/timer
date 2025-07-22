@@ -1,6 +1,6 @@
 module github.com/AmrSaber/timer
 
-go 1.22.2
+go 1.24.5
 
 require github.com/gosuri/uilive v0.0.4
 

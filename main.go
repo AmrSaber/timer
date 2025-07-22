@@ -16,6 +16,10 @@ import (
 
 var numberRegex = regexp.MustCompile(`^-?\d+(?:\.\d+)?$`)
 
+type TimerContextKey int
+
+const signalKey TimerContextKey = iota
+
 func main() {
 	if len(os.Args) == 1 {
 		fmt.Fprintln(os.Stderr, "missing duration")
@@ -23,7 +27,6 @@ func main() {
 	}
 
 	waitDuration, err := parseDuration()
-
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error parsing duration(s):\n%s\n", err)
 		os.Exit(1)
@@ -32,11 +35,21 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	handleSigterm(ctx, cancel)
+	handleSigterm(ctx, func(signal os.Signal) {
+		ctx = context.WithValue(ctx, signalKey, signal)
+		cancel()
+	})
+
 	countDown(ctx, waitDuration)
 
 	if ctx.Err() != nil {
-		os.Exit(1)
+		if signal, ok := ctx.Value(signalKey).(syscall.Signal); ok {
+			// If failed because of system signal: then exit with right code
+			os.Exit(128 + int(signal))
+		} else {
+			// Otherwise: exit with generic code
+			os.Exit(1)
+		}
 	}
 }
 
@@ -67,14 +80,14 @@ func parseDuration() (time.Duration, error) {
 	return waitDuration, nil
 }
 
-func handleSigterm(ctx context.Context, fn func()) {
+func handleSigterm(ctx context.Context, fn func(os.Signal)) {
 	go func() {
 		signals := make(chan os.Signal, 1)
 		signal.Notify(signals, syscall.SIGTERM, syscall.SIGINT)
 
 		select {
-		case <-signals:
-			fn()
+		case signal := <-signals:
+			fn(signal)
 		case <-ctx.Done():
 		}
 	}()
