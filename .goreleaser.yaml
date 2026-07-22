@@ -23,6 +23,37 @@ builds:
       - "386"
 
 archives:
-  - formats:
-      - binary
-    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+  - formats: [tar.gz]
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+
+checksum:
+  name_template: "checksums.txt"
+
+release:
+  github:
+    owner: AmrSaber
+    name: timer
+
+# Homebrew tap for macOS and Linux
+brews:
+  - repository:
+      owner: AmrSaber
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: "https://github.com/AmrSaber/timer"
+    description: "A simple command-line timer"
+    license: "MIT"
+    install: |
+      bin.install "timer"
+    test: |
+      system "#{bin}/timer", "0"
