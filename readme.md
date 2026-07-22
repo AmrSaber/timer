@@ -13,6 +13,14 @@ As it behaves exactly the same as `sleep` (and more).
 
 ## Install
 
+### Homebrew
+```bash
+brew trust --formula AmrSaber/tap/timer
+brew install AmrSaber/tap/timer
+```
+
+Since Homebrew 6.0.0, non-official taps must be explicitly trusted. Use the full name `AmrSaber/tap/timer` to avoid clashing with the other `timer` formula/cask in Homebrew core.
+
 ### Go install
 You can install the package from code with [go](https://go.dev/doc/install) by running:
 ```bash
