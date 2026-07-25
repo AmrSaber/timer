@@ -1,26 +1,30 @@
 # Template from: https://goreleaser.com/customization/build/
 project_name: timer
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
 
 builds:
-  - main: .
-
+  - main: ./main.go
+    binary: timer
     env:
       - CGO_ENABLED=0
-
-    # GOOS list to build for.
-    # For more info refer to: https://golang.org/doc/install/source#environment
     goos:
       - linux
       - darwin
       - windows
-
-    # GOARCH to build for.
-    # For more info refer to: https://golang.org/doc/install/source#environment
     goarch:
       - amd64
       - arm
       - arm64
       - "386"
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - "-s -w -X main.version={{.Version}}"
 
 archives:
   - formats: [tar.gz]
@@ -56,4 +60,4 @@ brews:
     install: |
       bin.install "timer"
     test: |
-      system "#{bin}/timer", "0"
+      system "#{bin}/timer", "--version"
