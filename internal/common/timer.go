@@ -9,9 +9,16 @@ import (
 	"github.com/gosuri/uilive"
 )
 
-func CountDown(ctx context.Context, duration time.Duration) {
+func CountDown(ctx context.Context, duration time.Duration) error {
 	uiWriter := uilive.New()
 	uiWriter.Start()
+
+	defer func() {
+		uiWriter.Stop()
+
+		// Move cursor 1 line up
+		fmt.Print("\033[1A")
+	}()
 
 	now := time.Now()
 	target := now.Add(duration)
@@ -28,7 +35,9 @@ loop:
 		minutes %= 60
 
 		_, err := fmt.Fprintf(uiWriter, "%02d:%02d:%02d\n", hours, minutes, seconds)
-		FailOn(err)
+		if err != nil {
+			return err
+		}
 
 		// Sleep or exit
 		select {
@@ -41,10 +50,5 @@ loop:
 	}
 
 	_, err := fmt.Fprintln(uiWriter, "")
-	FailOn(err)
-
-	uiWriter.Stop()
-
-	// Move cursor 1 line up
-	fmt.Print("\033[1A")
+	return err
 }
