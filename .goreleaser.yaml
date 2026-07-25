@@ -2,7 +2,7 @@
 project_name: timer
 
 builds:
-  - main: ./src/main.go
+  - main: .
 
     env:
       - CGO_ENABLED=0
