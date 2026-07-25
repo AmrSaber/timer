@@ -20,14 +20,14 @@ func FailOn(err error) {
 	Assert(err == nil, "%v", err)
 }
 
-func HandleSigterm(ctx context.Context, fn func(os.Signal)) {
+func HandleSigterm(ctx context.Context, fn func(syscall.Signal)) {
 	go func() {
 		signals := make(chan os.Signal, 1)
 		signal.Notify(signals, syscall.SIGTERM, syscall.SIGINT)
 
 		select {
 		case signal := <-signals:
-			fn(signal)
+			fn(signal.(syscall.Signal))
 		case <-ctx.Done():
 		}
 	}()

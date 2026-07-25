@@ -5,6 +5,7 @@ import (
 	"context"
 	"os"
 	"strconv"
+	"sync/atomic"
 	"syscall"
 	"time"
 
@@ -12,16 +13,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type TimerContextKey int
-
-const signalKey TimerContextKey = iota
-
 var rootCmd = &cobra.Command{
 	Use:   "timer <duration>",
 	Short: "Countdown timer",
 	Long: `Countdown tool that waits for a specified duration and exits when the time is up.
 Arguments can be in the form "1h30m10s", "2m", "30s", ...
-Duration is rounded up to nearest second.`,
+Duration is rounded to the nearest second.`,
 
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -45,8 +42,9 @@ Duration is rounded up to nearest second.`,
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
-		common.HandleSigterm(ctx, func(signal os.Signal) {
-			ctx = context.WithValue(ctx, signalKey, signal)
+		var exitSignal atomic.Pointer[syscall.Signal]
+		common.HandleSigterm(ctx, func(signal syscall.Signal) {
+			exitSignal.Store(&signal)
 			cancel()
 		})
 
@@ -54,9 +52,9 @@ Duration is rounded up to nearest second.`,
 		common.FailOn(err)
 
 		if ctx.Err() != nil {
-			if signal, ok := ctx.Value(signalKey).(syscall.Signal); ok {
+			if signal := exitSignal.Load(); signal != nil {
 				// If failed because of system signal: then exit with right code
-				os.Exit(128 + int(signal))
+				os.Exit(128 + int(*signal))
 			} else {
 				// Otherwise: exit with generic code
 				os.Exit(1)
