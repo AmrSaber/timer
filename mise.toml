@@ -1,0 +1,10 @@
+[tools]
+golangci-lint = "2"
+
+[tasks.lint]
+description = "Lint code"
+quiet = true
+run = '''
+go vet ./...
+golangci-lint run ./...
+'''
