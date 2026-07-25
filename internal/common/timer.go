@@ -14,6 +14,8 @@ func CountDown(ctx context.Context, duration time.Duration) error {
 	uiWriter.Start()
 
 	defer func() {
+		_, _ = fmt.Fprintln(uiWriter, "")
+		_ = uiWriter.Flush()
 		uiWriter.Stop()
 
 		// Erase the trailing empty line so the timer vanishes cleanly
@@ -39,6 +41,8 @@ loop:
 			return err
 		}
 
+		_ = uiWriter.Flush()
+
 		// Odd interval to avoid syncing with second boundaries,
 		// which would cause the display to hold the same value twice
 		select {
@@ -50,6 +54,5 @@ loop:
 		now = time.Now()
 	}
 
-	_, err := fmt.Fprintln(uiWriter, "")
-	return err
+	return nil
 }
