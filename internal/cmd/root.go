@@ -20,7 +20,8 @@ var rootCmd = &cobra.Command{
 	Use:   "timer <duration>",
 	Short: "Countdown timer",
 	Long: `Countdown tool that waits for a specified duration and exits when the time is up.
-Arguments can be in the form "1h30m10s" or any variation of them. Duration is rounded up to nearest second.`,
+Arguments can be in the form "1h30m10s", "2m", "30s", ...
+Duration is rounded up to nearest second.`,
 
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
