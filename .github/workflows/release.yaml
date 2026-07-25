@@ -9,7 +9,20 @@ permissions:
   contents: write
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up mise
+        uses: jdx/mise-action@v2
+
+      - name: Run lint
+        run: mise run lint
+
   goreleaser:
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
