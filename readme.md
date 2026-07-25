@@ -43,5 +43,5 @@ timer 10s
 
 Duration can have any of go's duration suffixes (h, m, s, ms, us, ...) but whatever duration is given it is rounded to the closest second. If no suffix is given to a duration, then `s` is assumed.
 
-Not providing any duration, providing wrong duration, or cancelling the timer before it's done (sending SIGINT signal with ctrl+c) results in exit code of 1; otherwise, exits with 0 exit code when timer is done.
+Not providing any duration or providing wrong duration results in exit code of 1. Cancelling the timer before it's done (sending SIGINT signal with ctrl+c) results in exit code of 130 (128 + signal number). Otherwise, exits with 0 when timer is done.
 
