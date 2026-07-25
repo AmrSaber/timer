@@ -16,7 +16,7 @@ func CountDown(ctx context.Context, duration time.Duration) error {
 	defer func() {
 		uiWriter.Stop()
 
-		// Move cursor 1 line up
+		// Erase the trailing empty line so the timer vanishes cleanly
 		fmt.Print("\033[1A")
 	}()
 
@@ -39,7 +39,8 @@ loop:
 			return err
 		}
 
-		// Sleep or exit
+		// Odd interval to avoid syncing with second boundaries,
+		// which would cause the display to hold the same value twice
 		select {
 		case <-time.After(253 * time.Millisecond):
 		case <-ctx.Done():
